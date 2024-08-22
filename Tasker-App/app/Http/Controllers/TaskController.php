@@ -109,7 +109,7 @@ class TaskController extends Controller
         try {
 
             $task->update($validatedData);
-
+            Log::info('task updated successfully');
             return redirect()->route('tasks.show', $task->id)->with('status', 'Task updated successfully');
         } catch (\Exception $e) {
             Log::error('There was an error creating the product' . $e->getMessage());
@@ -126,6 +126,7 @@ class TaskController extends Controller
         try {
 
             $task->delete();
+            Log::info('task deleted successfully');
             return redirect()->route('Task.index')->with('status', 'task deleted');
         } catch (\Exception $e) {
             Log::error('There was an error creating the product' . $e->getMessage());
