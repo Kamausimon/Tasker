@@ -29,7 +29,7 @@ class RegisterController extends Controller
                 'email' => 'required|email|unique:users',
                 'password' => 'required|min:8|confirmed'
             ]);
-            Log::info('data validated');
+            Log::info('Data validated for user registration', ['email' => $request->email]);
 
             $user = User::create([
                 'email' => $request->email,
@@ -38,10 +38,11 @@ class RegisterController extends Controller
             ]);
             Auth::login($user);
             Log::info('success registering user');
+
             return Redirect::route('auth.login')->with('success', 'user registered successfully');
         } catch (\Exception $e) {
-            Log::error('error registering user' . $e->getMessage());
-            return Redirect::route('auth.register');
+            Log::error('Error registering user: ' . $e->getMessage(), ['email' => $request->email]);
+            return Redirect::route('auth.register')->with('error', 'There was an error registering the user.');
         }
     }
 }
