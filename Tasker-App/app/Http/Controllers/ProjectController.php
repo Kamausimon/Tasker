@@ -18,7 +18,7 @@ class ProjectController extends Controller
         //
         $projects = Project::all();
 
-        return view('Project/index', ['projects' => $projects]);
+        return view('project.index', ['projects' => $projects]);
     }
 
     /**
@@ -27,7 +27,7 @@ class ProjectController extends Controller
     public function create()
     {
         //
-        return view('Projects/create');
+        return view('project.create');
     }
 
     /**
@@ -62,7 +62,7 @@ class ProjectController extends Controller
             $project->tasks()->sync($request->task_ids);
         }
 
-        return redirect()->route('projects.index')->with('status', 'Project created successfully!');
+        return redirect()->route('project.index')->with('status', 'Project created successfully!');
     }
 
     /**
@@ -73,7 +73,7 @@ class ProjectController extends Controller
         //
         $project = Project::findOrFail($id);
 
-        return view('Project/Show', ['project' => $project]);
+        return view('project.show', ['project' => $project]);
     }
 
     /**
@@ -84,7 +84,7 @@ class ProjectController extends Controller
         //
         $project = Project::findOrFail($id);
         if (!$project) abort(404);
-        return view('Project/Edit', ['project' => $project]);
+        return view('Project.edit', ['project' => $project]);
     }
 
     /**

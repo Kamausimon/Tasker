@@ -16,7 +16,7 @@ class NotificationsController extends Controller
     {
         $notifications = Auth::user()->notifications;
 
-        return view('Notification/index', ['notifications' => $notifications]);
+        return view('notification.index', ['notifications' => $notifications]);
     }
 
     public function markAsRead($id)

@@ -12,7 +12,7 @@ class TagController extends Controller
     //
     public function create()
     {
-        return view("Tag/create");
+        return view("tag.create");
     }
 
     public function store(Request $request)
@@ -35,7 +35,7 @@ class TagController extends Controller
     {
         $tag = Tag::findOrFail($id);
 
-        return view('Tag/Edit', ['tag' => $tag]);
+        return view('tag.edit', ['tag' => $tag]);
     }
 
     public function update(Request $request, string $id)

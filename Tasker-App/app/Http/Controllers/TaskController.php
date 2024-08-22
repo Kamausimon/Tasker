@@ -19,7 +19,7 @@ class TaskController extends Controller
         //
         $tasks = Task::all();
         Log::info("Fetched all the tasks");
-        return view('Task/Index', ['tasks' => $tasks]);
+        return view('task.index', ['tasks' => $tasks]);
     }
 
     /**
@@ -28,7 +28,7 @@ class TaskController extends Controller
     public function create()
     {
         //
-        return view('Task/create');
+        return view('task.create');
     }
 
     /**
@@ -71,7 +71,7 @@ class TaskController extends Controller
     {
         //
         $task = Task::findOrFail($id);
-        return view('Task/Show', ['task' => $task]);
+        return view('task.show', ['task' => $task]);
     }
 
     /**
@@ -82,7 +82,7 @@ class TaskController extends Controller
         //
         $task = Task::findOrFail($id);
         if (!$task) abort(404);
-        return view('Task/Edit', ['task' => $task]);
+        return view('task.edit', ['task' => $task]);
     }
 
     /**
