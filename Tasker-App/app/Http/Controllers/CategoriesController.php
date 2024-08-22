@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\TaskCategory;
 use App\Models\Task;
+use Illuminate\Support\Facades\Log;
 
 class CategoriesController extends Controller
 {
@@ -29,18 +30,24 @@ class CategoriesController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'color' => 'string|nullable',
-            'task_ids' => 'array'
+            'task_ids' => 'array|exists:tasks,id'
         ]);
 
-        $category = new TaskCategory();
-        $category->name = $request->name;
-        $category->save();
+        try {
+            $category = new TaskCategory();
+            $category->name = $request->name;
+            $category->color = $request->color;
+            $category->save();
 
-        if ($request->task_ids) {
-            $category->tasks()->attach($request->task_ids);
+            if ($request->task_ids) {
+                $category->tasks()->attach($request->task_ids);
+            }
+
+            return redirect()->route('categories.index')->with('status', 'Category created successfully.');
+        } catch (\Exception $e) {
+            Log::error('Error creating category: ' . $e->getMessage());
+            return redirect()->route('categories.index')->withErrors(['error' => 'There was an error creating the category.']);
         }
-
-        return redirect()->route('categories.index')->with('status', 'Category created successfully.');
     }
 
     public function edit(TaskCategory $category)
