@@ -7,6 +7,7 @@ use App\Models\Notification;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
 
 class NotificationsController extends Controller
 {
@@ -15,17 +16,23 @@ class NotificationsController extends Controller
     public function index()
     {
         $notifications = Auth::user()->notifications;
-
+        Log::info('Fetched all notifications for user.', ['user_id' => Auth::id()]);
         return view('notification.index', ['notifications' => $notifications]);
     }
 
     public function markAsRead($id)
     {
-        // Find the notification by id
-        $notification = Auth::user()->notifications->findOrFail($id);
-        $notification->markAsRead();
+        try {
+            // Validate the ID
+            $notification = Auth::user()->notification->findOrFail($id);
+            $notification->markAsRead();
+            Log::info('Notification marked as read.', ['notification_id' => $id]);
 
-        return redirect()->back()->with('status', 'Notification marked as read.');
+            return redirect()->back()->with('status', 'Notification marked as read.');
+        } catch (\Exception $e) {
+            Log::error('Error marking notification as read: ' . $e->getMessage(), ['notification_id' => $id]);
+            return redirect()->back()->with('error', 'There was an error marking the notification as read.');
+        }
     }
 
     /**
@@ -33,9 +40,15 @@ class NotificationsController extends Controller
      */
     public function markAllAsRead()
     {
-        Auth::user()->unreadNotifications->markAsRead();
+        try {
+            Auth::user()->unreadNotifications->markAsRead();
+            Log::info('All notifications marked as read.', ['user_id' => Auth::id()]);
 
-        return redirect()->back()->with('status', 'All notifications marked as read.');
+            return redirect()->back()->with('status', 'All notifications marked as read.');
+        } catch (\Exception $e) {
+            Log::error('Error marking all notifications as read: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'There was an error marking all notifications as read.');
+        }
     }
 
     /**
@@ -43,12 +56,19 @@ class NotificationsController extends Controller
      */
     public function destroy($id)
     {
-        // Find the notification by id
-        $notification =  Auth::user()->notifications->findOrFail($id);
-        $notification->delete();
+        try {
+            // Validate the ID
+            $notification = Auth::user()->notifications->findOrFail($id);
+            $notification->delete();
+            Log::info('Notification deleted.', ['notification_id' => $id]);
 
-        return redirect()->back()->with('status', 'Notification deleted.');
+            return redirect()->back()->with('status', 'Notification deleted.');
+        } catch (\Exception $e) {
+            Log::error('Error deleting notification: ' . $e->getMessage(), ['notification_id' => $id]);
+            return redirect()->back()->with('error', 'There was an error deleting the notification.');
+        }
     }
+
 
     /**
      * Send a notification (example method).
