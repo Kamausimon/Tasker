@@ -18,17 +18,24 @@ class TagController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'name' => 'string|required|max:255',
+            'name' => 'required|string|max:255',
             'color' => 'string|nullable'
         ]);
 
-        $tag = Tag::create($validatedData);
+        try {
+            $tag = Tag::create($validatedData);
 
-        if ($request->has('tasks')) {
-            $tag->tags()->Attach($request->input('tasks'));
+            if ($request->has('tasks')) {
+                $tag->tasks()->attach($request->input('tasks'));
+            }
+
+            Log::info('Tag created successfully.', ['tag_id' => $tag->id]);
+
+            return redirect()->route('task.index')->with('success', 'Tag created successfully.');
+        } catch (\Exception $e) {
+            Log::error('Error creating tag: ' . $e->getMessage());
+            return redirect()->route('tag.create')->with('error', 'There was an error creating the tag.');
         }
-
-        return redirect()->route('tasks.index')->with('success', '');
     }
 
     public function edit(string $id)
@@ -47,30 +54,34 @@ class TagController extends Controller
 
         $tag = Tag::findOrFail($id);
         try {
-
             $tag->update($validatedData);
 
             if ($request->has('tasks')) {
-                $tag->tags()->sync($request->input('tasks'));
+                $tag->tasks()->sync($request->input('tasks'));
             }
+
+            Log::info('Tag updated successfully.', ['tag_id' => $tag->id]);
+
+            return redirect()->route('tags.index')->with('status', 'Tag updated successfully.');
         } catch (\Exception $e) {
-            Log::error($e->getMessage() . 'there was an error while updating the tag');
-            return redirect()->route('')->with('status', 'there was an error');
+            Log::error('Error updating tag: ' . $e->getMessage());
+            return redirect()->route('tags.index')->with('status', 'There was an error updating the tag.');
         }
     }
 
     public function destroy(string $id)
     {
-        $tag = Tag::findorfail($id);
+        $tag = Tag::findOrFail($id);
 
         try {
-
             $tag->delete();
 
-            return redirect()->route('tasks.index')->with('status', 'success deleting tag');
+            Log::info('Tag deleted successfully.', ['tag_id' => $tag->id]);
+
+            return redirect()->route('tasks.index')->with('status', 'Tag deleted successfully.');
         } catch (\Exception $e) {
-            log::error('there was an error deleting the tag' . $e->getMessage());
-            return redirect()->route('tasks.index')->with('status', 'error deleting tag');
+            Log::error('Error deleting tag: ' . $e->getMessage());
+            return redirect()->route('tasks.index')->with('status', 'There was an error deleting the tag.');
         }
     }
 }
