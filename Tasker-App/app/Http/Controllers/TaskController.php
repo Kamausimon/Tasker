@@ -39,29 +39,33 @@ class TaskController extends Controller
         //
         $request->validate([
             'title' => 'required|string|max:255',
-            'description' => 'string|required',
+            'description' => 'required|string',
             'completed' => 'boolean',
-            'completed_at' => 'nullable|timestamp',
-            'due_at' => 'nullable|timestamp',
+            'completed_at' => 'nullable|date',
+            'due_at' => 'nullable|date',
             'priority' => 'required|string|in:low,medium,high',
             'project_id' => 'nullable|exists:projects,id',
             'category_id' => 'nullable|exists:task_categories,id'
 
         ]);
-
-        Task::create([
-            'title' => $request->title,
-            'description' => $request->description,
-            'completed' => $request->completed,
-            'completed_at' => $request->completed_at,
-            'due_at' => $request->due_at,
-            'priority' => $request->priority,
-            'project_id' => $request->project_id,
-            'category_id' => $request->category_Id,
-            'user_id' => Auth::id(),
-        ]);
-
-        return redirect()->route('tasks.index')->with('status', 'task created successfully');
+        try {
+            $task = Task::create([
+                'title' => $request->title,
+                'description' => $request->description,
+                'completed' => $request->completed,
+                'completed_at' => $request->completed_at,
+                'due_at' => $request->due_at,
+                'priority' => $request->priority,
+                'project_id' => $request->project_id,
+                'category_id' => $request->category_Id,
+                'user_id' => Auth::id(),
+            ]);
+            Log::info('Task created successfully.', ['task_id' => $task->id]);
+            return redirect()->route('tasks.index')->with('status', 'task created successfully');
+        } catch (\Exception $e) {
+            Log::error('Error creating task: ' . $e->getMessage());
+            return redirect()->route('tasks.create')->with('error', 'There was an error creating the task.');
+        }
     }
 
     /**
