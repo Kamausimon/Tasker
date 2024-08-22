@@ -21,16 +21,17 @@ class CommentsController extends Controller
     public function store(Request $request, string $id)
     {
         $request->validate([
-            'comment' => 'text|required',
+            'comment' => 'required|text',
         ]);
         $task = Task::findOrFail($id);
+
         Comment::create([
             'comment' => $request->comment,
             'user_id' => Auth::id(),
             'task_id' => $task->id,
         ]);
 
-        return redirect()->route('tasks.show')->with('status', 'success the comment has been created');
+        return redirect()->route('task.show', $task->id)->with('status', 'success the comment has been created');
     }
 
     public function destroy(string $id)
@@ -42,10 +43,10 @@ class CommentsController extends Controller
             $comment->delete();
 
             Log::info('comment deleted successfully');
-            return redirect()->route('tasks.index')->with('status', 'comment deleted successfully');
+            return redirect()->route('task.index')->with('status', 'comment deleted successfully');
         } catch (\Exception $e) {
             Log::error('there was an error deleting the comment');
-            return redirect()->route('tasks.index')->with('status', 'error when deleting comment');
+            return redirect()->route('task.index')->withErrors(['error' => 'there was an error deleting the comment']);
         }
     }
 }
