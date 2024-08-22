@@ -14,14 +14,14 @@ class CategoriesController extends Controller
     {
         // Fetch all categories
         $categories = TaskCategory::with('tasks')->get();
-        return view('Categories/Index', compact('categories'));
+        return view('categories.index', compact('categories'));
     }
 
     public function create()
     {
         // Fetch tasks for the form
         $tasks = Task::all();
-        return view('Categories/Create', compact('tasks'));
+        return view('categories.create', compact('tasks'));
     }
 
     public function store(Request $request)
@@ -48,7 +48,7 @@ class CategoriesController extends Controller
         $tasks = Task::all();
         $categoryTasks = $category->tasks->pluck('id')->toArray();
 
-        return view('Categories/Edit', compact('category', 'tasks', 'categoryTasks'));
+        return view('categories.edit', compact('category', 'tasks', 'categoryTasks'));
     }
 
     public function update(Request $request, TaskCategory $category)
