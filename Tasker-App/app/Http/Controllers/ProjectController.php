@@ -43,26 +43,33 @@ class ProjectController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string',
-            'start_date' => 'date|required',
-            'end_date' => 'date|required|after_or_equal:start_date',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
             'task_ids' => 'nullable|array',
-            'task_ids*' => 'exists:tasks,id'
+            'task_ids.*' => 'exists:tasks,id'
         ]);
 
-        $project =  Project::create([
-            'name' => $request->name,
-            'description' => $request->description,
-            'start_date' => $request->start_date,
-            'end_date' => $request->end_date,
-            'user_id' => Auth::id()
-        ]);
+        try {
+            $project = Project::create([
+                'name' => $request->name,
+                'description' => $request->description,
+                'start_date' => $request->start_date,
+                'end_date' => $request->end_date,
+                'user_id' => Auth::id()
+            ]);
 
-        // Attach tasks to project if any were selected
-        if ($request->has('task_ids')) {
-            $project->tasks()->sync($request->task_ids);
+            // Attach tasks to project if any were selected
+            if ($request->has('task_ids')) {
+                $project->tasks()->sync($request->task_ids);
+            }
+
+            Log::info('Project created successfully.', ['project_id' => $project->id]);
+
+            return redirect()->route('project.index')->with('status', 'Project created successfully!');
+        } catch (\Exception $e) {
+            Log::error('There was an error creating the project: ' . $e->getMessage());
+            return redirect()->route('project.create')->with('error', 'There was an error creating the project.');
         }
-
-        return redirect()->route('project.index')->with('status', 'Project created successfully!');
     }
 
     /**
