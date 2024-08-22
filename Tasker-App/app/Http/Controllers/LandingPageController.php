@@ -10,7 +10,7 @@ class LandingPageController extends Controller
     //
     public function create()
     {
-        return view('Landing/create');
+        return view('landing.create');
     }
 
     public function index() {}
