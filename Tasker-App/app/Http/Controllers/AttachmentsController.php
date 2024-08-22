@@ -21,10 +21,14 @@ class AttachmentsController extends Controller
         $request->validate([
             'file' => 'required|file|max:2048',
         ]);
-        if ($request->hasFile('file')) {
-            $file = $request->file('file');
-            $path = $file->store('attachments', 'public');
+        if (!$request->hasFile('file')) {
+            return redirect()->back()->withErrors(['error' => 'no file found']);
         }
+
+
+        $file = $request->file('file');
+        $path = $file->store('attachments', 'public');
+
 
         $task = Task::findOrFail($id);
 
@@ -40,10 +44,10 @@ class AttachmentsController extends Controller
 
             $attachment->save();
 
-            return redirect()->route('tasks.show', $task->id)->with('status', 'file saved up sucessfully');
+            return redirect()->route('task.show', $task->id)->with('status', 'file saved up sucessfully');
         } catch (\Exception $e) {
             log::error('there was an error' . $e->getMessage());
-            return redirect()->route('tasks.index')->with('status', 'there was an error saving the attachment');
+            return redirect()->route('task.index')->with('status', 'there was an error saving the attachment');
         }
     }
 
