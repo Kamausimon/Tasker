@@ -82,8 +82,12 @@
         </div>
 
         <!-- end of main content -->
-    </div>
 
+
+    </div>
+    <!-- footer -->
+    @include('Partials._footer')
+    <!-- end of footer -->
 
 </body>
 
