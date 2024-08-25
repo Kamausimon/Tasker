@@ -3,11 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Redirect;
 use App\Models\User;
 
 class RegisterController extends Controller
@@ -39,10 +37,10 @@ class RegisterController extends Controller
             Auth::login($user);
             Log::info('success registering user');
 
-            return Redirect::route('auth.login')->with('success', 'user registered successfully');
+            return redirect()->route('login')->with('success', 'user registered successfully');
         } catch (\Exception $e) {
             Log::error('Error registering user: ' . $e->getMessage(), ['email' => $request->email]);
-            return Redirect::route('auth.register')->with('error', 'There was an error registering the user.');
+            return redirect()->route('register')->with('error', 'There was an error registering the user.');
         }
     }
 }
