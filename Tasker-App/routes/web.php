@@ -38,15 +38,15 @@ Route::get('/task/{id}/edit', [TaskController::class, 'edit'])->name('task.edit'
 Route::delete('/deleteTask/{id}', [TaskController::class, 'destroy'])->name('task.destroy');
 
 //RegisterController
-Route::get('/register', [RegisterController::class, 'register'])->name('auth.register');
-Route::post('/registerUser', [RegisterController::class, 'RegisterUser'])->name('auth.registerUser');
+Route::get('/register', [RegisterController::class, 'register'])->name('register');
+Route::post('/registerUser', [RegisterController::class, 'RegisterUser'])->name('Auth.registerUser');
 
 //LogoutController
-Route::post('/logout', [LogoutController::class, 'destroy'])->name('auth.logout');
+Route::post('/logout', [LogoutController::class, 'destroy'])->name('Auth.logout');
 
 //loginController
-Route::get('/login', [LoginController::class, 'loginForm'])->name('auth.login');
-Route::post('/loginUser', [LoginController::class, 'login'])->name('auth.loginUser');
+Route::get('/login', [LoginController::class, 'loginForm'])->name('login');
+Route::post('/loginUser', [LoginController::class, 'login'])->name('Auth.loginUser');
 
 //ProjectController
 Route::get('/project', [ProjectController::class, 'create'])->name('project.create');
