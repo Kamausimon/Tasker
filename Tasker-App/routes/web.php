@@ -6,6 +6,7 @@ use App\Http\Controllers\AttachmentsController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\CommentsController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\NotificationsController;
@@ -13,6 +14,7 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\ReportsController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -89,6 +91,15 @@ Route::delete('/categories/{category}', [CategoriesController::class, 'destroy']
 Route::post('/attachment', [AttachmentsController::class, 'store'])->name('attchment.store');
 Route::delete('/attachment/{attachment}', [AttachmentsController::class, 'destroy'])->name('attachment.delete');
 Route::get('/attachments/{attachment}/download', [AttachmentsController::class, 'download'])->name('attachment.download');
+
+//DashboardController
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+
+//reportsController
+Route::get('/reports/summary', [ReportsController::class, 'summaryReport'])->name('reports.summary');
+Route::get('/reports/tasks', [ReportsController::class, 'taskReport'])->name('reports.tasks');
+Route::get('/reports/projects', [ReportsController::class, 'projectReport'])->name('reports.projects');
 
 
 require __DIR__ . '/auth.php';
