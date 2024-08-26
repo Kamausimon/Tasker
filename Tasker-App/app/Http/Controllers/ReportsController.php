@@ -10,7 +10,20 @@ use App\Models\Project;
 class ReportsController extends Controller
 {
     //
-    public function summaryReport() {}
+    public function summaryReport()
+    {
+        $completedTasks = Task::where('status', 'completed')->get();
+        $tasksByUser = Task::select('user_id', \DB::raw('count(*) as total'))
+            ->groupBy('user_id')
+            ->get();
+
+        // Fetch projects data
+        $projects = Project::withCount('tasks')->get();
+        $overdueProjects = Project::where('deadline', '<', now())->get();
+
+        // Pass data to the view
+        return view('reports.summary', compact('completedTasks', 'tasksByUser', 'projects', 'overdueProjects'));
+    }
 
     public function taskReport()
     {
