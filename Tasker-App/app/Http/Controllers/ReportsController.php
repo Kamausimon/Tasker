@@ -13,7 +13,7 @@ class ReportsController extends Controller
     public function summaryReport()
     {
         $completedTasks = Task::where('status', 'completed')->get();
-        $tasksByUser = Task::select('user_id', \DB::raw('count(*) as total'))
+        $tasksByUser = Task::select('user_id', DB::raw('count(*) as total'))
             ->groupBy('user_id')
             ->get();
 
