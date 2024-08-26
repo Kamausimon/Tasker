@@ -4,7 +4,7 @@
 
  <body>
      @include('partials._nav')
-
+     @include('partials._sidebar')
      <!-- main content -->
      <div>
          <h1>Task Dashboard</h1>
