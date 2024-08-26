@@ -1,19 +1,19 @@
-<div x-data="{ open: false }" class="flex">
+<div x-data="{ open: false }" class="flex h-screen">
     <!-- Sidebar -->
     <div :class="open ? 'translate-x-0' : '-translate-x-full'" class="bg-gray-800 text-white w-64 space-y-6 py-7 px-2 absolute inset-y-0 left-0 transform md:relative md:translate-x-0 transition duration-200 ease-in-out">
-        <a href="#" class="text-white flex items-center space-x-2 px-4">
-            <span class="text-2xl font-extrabold">Tasker</span>
+        <a href="{{route('task.index')}}" class="text-white flex items-center space-x-2 px-4">
+            <img src="/images/tasker-high-resolution-logo-transparent.png" alt="">
         </a>
         <nav>
-            <a href="#" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700">Dashboard</a>
-            <a href="#" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700">Tasks</a>
-            <a href="#" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700">Projects</a>
-            <a href="#" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700">Settings</a>
+            <a href="{{route('task.index')}}" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700">Dashboard</a>
+            <a href="{{route('task.create')}}" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700">Tasks</a>
+            <a href="{{route('project.create')}}" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700">Projects</a>
+            <a href="{{route('task.create')}}" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700">Reports</a>
         </nav>
     </div>
 
     <!-- Main content -->
-    <div class="flex-1">
+    <div class="flex-1 flex flex-col">
         <!-- Toggle button -->
         <button @click="open = !open" class="p-2 bg-gray-800 text-white rounded-md md:hidden">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -22,10 +22,6 @@
         </button>
 
         <!-- Your main content goes here -->
-        <div class="p-4">
-            <!-- Example content -->
-            <h1 class="text-2xl font-bold">Main Content</h1>
-            <p>This is the main content area.</p>
-        </div>
+
     </div>
 </div>
