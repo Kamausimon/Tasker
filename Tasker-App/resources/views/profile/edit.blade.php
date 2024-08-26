@@ -1,8 +1,14 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Profile') }}
-        </h2>
+        <div class="flex items-center justify-between">
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight ">
+                {{ __('Profile') }}
+            </h2>
+            <a href="{{ route('task.index') }}">
+                <x-application-logo class=" h-9 w-auto fill-current text-gray-800" />
+            </a>
+        </div>
+
     </x-slot>
 
     <div class="py-12">
