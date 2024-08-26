@@ -38,14 +38,14 @@ Route::get('/task/{id}/edit', [TaskController::class, 'edit'])->name('task.edit'
 Route::delete('/deleteTask/{id}', [TaskController::class, 'destroy'])->name('task.destroy');
 
 //RegisterController
-Route::get('/register', [RegisterController::class, 'register'])->name('register');
+Route::get('/register', [RegisterController::class, 'register'])->name('Auth.register');
 Route::post('/registerUser', [RegisterController::class, 'RegisterUser'])->name('Auth.registerUser');
 
 //LogoutController
 Route::post('/logout', [LogoutController::class, 'destroy'])->name('Auth.logout');
 
 //loginController
-Route::get('/login', [LoginController::class, 'loginForm'])->name('login');
+Route::get('/login', [LoginController::class, 'loginForm'])->name('Auth.login');
 Route::post('/loginUser', [LoginController::class, 'login'])->name('Auth.loginUser');
 
 //ProjectController
