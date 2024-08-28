@@ -18,9 +18,11 @@
                      @include('partials._minNav')
                  </div>
                  <!-- end of min nav -->
+                 <!-- main content layout -->
                  <div>
 
                  </div>
+                 <!-- main content layout -->
              </div>
          </div>
 
