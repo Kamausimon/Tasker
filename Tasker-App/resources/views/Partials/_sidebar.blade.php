@@ -1,13 +1,13 @@
 <div x-data="{ open: false }" class="flex h-screen">
     <!-- Sidebar -->
-    <div :class="open ? 'translate-x-0' : '-translate-x-full'" class="bg-gray-800 text-white w-64 space-y-6 py-7 px-2 absolute inset-y-0 left-0 transform md:relative md:translate-x-0 transition duration-200 ease-in-out">
+    <div :class="open ? 'translate-x-0' : '-translate-x-full'" class="bg-gray-800 text-white  space-y-6 py-7 px-2 absolute inset-y-0 left-0 transform md:relative md:translate-x-0 transition duration-200 ease-in-out">
         <a href="{{route('task.index')}}" class="text-white flex items-center space-x-2 px-4">
             <img src="/images/tasker-high-resolution-logo-transparent.png" alt="">
         </a>
         <nav>
-            <a href="{{route('task.index')}}" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700">Dashboard</a>
-            <a href="{{route('task.create')}}" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700">Tasks</a>
-            <a href="{{route('project.create')}}" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700">Projects</a>
+
+            <a href="{{route('task.index')}}" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700">Tasks</a>
+            <a href="{{route('project.index')}}" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700">Projects</a>
             <a href="{{route('reports.summary')}}" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700">Reports</a>
         </nav>
     </div>
