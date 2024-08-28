@@ -14,6 +14,6 @@ class DashboardController extends Controller
         $tasks = Task::all();
         Log::info('tasks fetched');
 
-        return view('dashboard', [$tasks => 'tasks']);
+        return view('dashboard', ['tasks' => $tasks]);
     }
 }
