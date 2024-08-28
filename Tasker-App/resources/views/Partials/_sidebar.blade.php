@@ -9,6 +9,7 @@
             <a href="{{route('task.index')}}" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700">Tasks</a>
             <a href="{{route('project.index')}}" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700">Projects</a>
             <a href="{{route('reports.summary')}}" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700">Reports</a>
+            <a href="#" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700">calendar</a>
         </nav>
     </div>
 
