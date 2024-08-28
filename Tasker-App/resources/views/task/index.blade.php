@@ -20,9 +20,9 @@
                  <!-- end of min nav -->
                  <!-- main content layout -->
                  <div>
-
+                     @yield('content')
                  </div>
-                 <!-- main content layout -->
+                 <!-- main content layout end -->
              </div>
          </div>
 
