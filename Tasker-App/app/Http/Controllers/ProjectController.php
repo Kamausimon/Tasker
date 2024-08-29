@@ -7,6 +7,7 @@ use App\Models\Project;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\support\facades\Log;
+use App\Models\Task;
 
 class ProjectController extends Controller
 {
@@ -40,13 +41,22 @@ class ProjectController extends Controller
             return redirect()->route('login')->with('error', 'You must be logged in to create a project.');
         }
 
-        $request->validate([
+        $validated =  $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
             'task_ids' => 'nullable|array',
-            'task_ids.*' => 'exists:tasks,id'
+            'task_ids.*' => 'exists:tasks,id',
+            'tasks' => 'nullable|array',
+            'tasks.*.title' => 'required|string|max:255',
+            'tasks.*.description' => 'nullable|string',
+            'tasks.*.due_at' => 'nullable|date',
+            'tasks.*.priority' => 'nullable|in:low,medium,high',
+            'tasks.*.completed' => 'boolean',
+            'tags' => 'nullable|string',
+            'priority' => 'nullable|string',
+            'completed' => 'boolean',
         ]);
 
         try {
@@ -61,6 +71,13 @@ class ProjectController extends Controller
             // Attach tasks to project if any were selected
             if ($request->has('task_ids')) {
                 $project->tasks()->sync($request->task_ids);
+            }
+
+            if (isset($validated['tasks'])) {
+                foreach ($validated['tasks'] as $taskData) {
+                    $taskData['project_id'] = $project->id;
+                    Task::create($taskData);
+                }
             }
 
             Log::info('Project created successfully.', ['project_id' => $project->id]);
@@ -106,7 +123,16 @@ class ProjectController extends Controller
             'start_date' => 'date|required',
             'end_date' => 'date|required|after_or_equal:start_date',
             'task_ids' => 'nullable|array',
-            'task_ids*' => 'exists:tasks,id'
+            'task_ids*' => 'exists:tasks,id',
+            'tasks' => 'nullable|array',
+            'tasks.*.title' => 'required|string|max:255',
+            'tasks.*.description' => 'nullable|string',
+            'tasks.*.due_at' => 'nullable|date',
+            'tasks.*.priority' => 'nullable|in:low,medium,high',
+            'tasks.*.completed' => 'boolean',
+            'tags' => 'nullable|string',
+            'priority' => 'nullable|string',
+            'completed' => 'boolean'
         ]);
 
         $project = Project::findOrFail($id);
