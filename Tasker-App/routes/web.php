@@ -93,7 +93,7 @@ Route::delete('/attachment/{attachment}', [AttachmentsController::class, 'destro
 Route::get('/attachments/{attachment}/download', [AttachmentsController::class, 'download'])->name('attachment.download');
 
 //DashboardController
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+Route::get('/dashboard/{id}', [DashboardController::class, 'index'])->name('dashboard')->middleware('auth');
 
 
 //reportsController
