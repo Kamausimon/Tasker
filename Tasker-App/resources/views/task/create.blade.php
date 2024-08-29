@@ -1,7 +1,7 @@
 @extends('task.index')
 
 @section('content')
-<div></div>
+
 <div class="max-w-lg mx-auto p-6 bg-white rounded-lg shadow-md mt-10">
     <form action="" method="POST">
         @csrf
