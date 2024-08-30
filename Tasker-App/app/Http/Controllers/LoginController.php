@@ -18,6 +18,8 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
+
+
         $request->validate([
             'email' => 'required|email',
             'password' => 'required|min:8|string'
@@ -27,7 +29,9 @@ class LoginController extends Controller
 
         if (Auth::attempt($credentials, $request->filled('remember'))) {
             $request->session()->regenerate();
-            return Redirect::to('/tasks')->with('status', 'success logging you in');
+            $userId = Auth::user()->id;
+            Log::info("$userId retrieved");
+            return Redirect::to("/dashboard/{$userId}",)->with('status', 'success logging you in');
         }
 
         Log::warning('failed login attempt', ['email' => $request->email]);
