@@ -57,7 +57,7 @@
 
         <!-- Pending Tasks  Card -->
         <div class="bg-white p-10 rounded-lg shadow-md">
-            <h2 class="text-2xl font-bold mb-4">Overdue Items</h2>
+            <h2 class="text-2xl font-bold mb-4">Pending Tasks</h2>
             <ul class="text-lg">
                 @foreach($pendingTasks as $task)
                 <li class="mb-2">{{ $task->title }}</li>
@@ -67,7 +67,7 @@
 
         <!-- Projects Card -->
         <div class="bg-white p-10 rounded-lg shadow-md">
-            <h2 class="text-2xl font-bold mb-4">Overdue Items</h2>
+            <h2 class="text-2xl font-bold mb-4">Projects</h2>
             <ul class="text-lg">
                 @foreach($projects as $project)
                 <li class="mb-2">{{ $project->name }}</li>
