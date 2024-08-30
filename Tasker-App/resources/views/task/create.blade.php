@@ -23,17 +23,6 @@
             @enderror
         </div>
 
-        <!-- completed -->
-        <div class="mb-4">
-            <label for="completed" class="block text-gray-700 text-sm font-bold mb-2">Completed</label>
-            <select id="completed" name="completed" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" disabled>
-                <option value="false" selected>False</option>
-                <option value="true">True</option>
-            </select>
-            @error('completed')
-            <span class="text-red-500 text-xs italic">{{ $message }}</span>
-            @enderror
-        </div>
 
         <!-- due at -->
         <div class="mb-4">
