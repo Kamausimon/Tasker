@@ -3,7 +3,7 @@
 @section('content')
 
 <div class="max-w-lg mx-auto p-6 bg-white rounded-lg shadow-md mt-10">
-    <form action="{{route('task.create')}}" method="POST">
+    <form action="{{route('task.store')}}" method="POST">
         @csrf
         <!-- title -->
         <div class="mb-4">
@@ -38,7 +38,7 @@
         <!-- due at -->
         <div class="mb-4">
             <label for="due_at" class="block text-gray-700 text-sm font-bold mb-2">Due At</label>
-            <input type="date" id="due_at" name="due_at" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            <input type="date" id="due_at" name="due_at" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" min="{{ now()->format('Y-m-d') }}">
             @error('due_at')
             <span class="text-red-500 text-xs italic">{{ $message }}</span>
             @enderror
@@ -74,6 +74,19 @@
         setTimeout(function() {
             document.getElementById('completed').disabled = false;
         }, 1000); // Simulate a delay for form submission
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const dueDateInput = document.getElementById('due_date');
+        const today = new Date().toISOString().split('T')[0]; // Get today's date in 'YYYY-MM-DD' format
+        dueDateInput.setAttribute('min', today); // Set the min attribute to today's date
+
+        dueDateInput.addEventListener('change', function() {
+            if (new Date(dueDateInput.value) < new Date(today)) {
+                alert('The due date cannot be in the past.');
+                dueDateInput.value = today;
+            }
+        });
     });
 </script>
 
