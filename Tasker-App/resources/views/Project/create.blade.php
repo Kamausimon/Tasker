@@ -24,10 +24,14 @@
             <span class="text-red-500 text-xs italic">{{ $message }}</span>
             @enderror
         </div>
-
+        <!-- priority -->
         <div class="mb-4">
-            <label for="priority" class="block text-gray-700 font-bold mb-2">Priority</label>
-            <input type="text" name="priority" id="priority" value="{{ old('priority') }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            <label for="priority" class="block text-gray-700 text-sm font-bold mb-2">Priority</label>
+            <select id="priority" name="priority" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+            </select>
             @error('priority')
             <span class="text-red-500 text-xs italic">{{ $message }}</span>
             @enderror
