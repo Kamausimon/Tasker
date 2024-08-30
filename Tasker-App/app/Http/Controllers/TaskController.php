@@ -42,7 +42,7 @@ class TaskController extends Controller
             'description' => 'required|string',
             'completed' => 'boolean',
             'completed_at' => 'nullable|date',
-            'due_at' => 'nullable|date',
+            'due_at' => 'nullable|date|after_or_equal:today',
             'priority' => 'required|string|in:low,medium,high',
             'project_id' => 'nullable|exists:projects,id',
             'category_id' => 'nullable|exists:task_categories,id'
