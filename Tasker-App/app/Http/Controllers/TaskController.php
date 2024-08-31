@@ -47,6 +47,8 @@ class TaskController extends Controller
             'category_id' => 'nullable|exists:task_categories,id'
 
         ]);
+
+        $userId = Auth::user()->id;
         try {
 
 
@@ -62,7 +64,7 @@ class TaskController extends Controller
                 'user_id' => Auth::id(),
             ]);
             Log::info('Task created successfully.', ['task_id' => $task->id]);
-            return redirect()->route('task.index')->with('status', 'task created successfully');
+            return redirect()->route("/dashboard/{$userId}")->with('status', 'task created successfully');
         } catch (\Exception $e) {
             Log::error('Error creating task: ' . $e->getMessage());
             return redirect()->route('task.create')->with('error', 'There was an error creating the task.');
