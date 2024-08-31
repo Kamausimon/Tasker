@@ -8,6 +8,7 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\support\facades\Log;
 use App\Models\Task;
+use App\Models\User;
 
 class ProjectController extends Controller
 {
@@ -163,5 +164,34 @@ class ProjectController extends Controller
             log::error('There was an error deleting the project' . $e->getMessage());
             return redirect()->route('project.index')->with('status', 'Encountered error while deleting product');
         }
+    }
+
+    public function addCollaborators(Request $request, string $projectId)
+    {
+        $project = Project::findOrFail($projectId);
+
+        $request->validate([
+            'user_id' => 'required|exists:users,id'
+        ]);
+
+        $user = User::findOrFail($request->user_id);
+        $project->collaborators()->attach($user->id);
+
+        return redirect()->route('projects.show', $projectId)->with('success', 'Collaborator added successfully.');
+    }
+
+    public function removeCollaborators(Request $request, string $projectId)
+    {
+        $project = Project::findOrFail($projectId);
+
+        // Validate the incoming request to ensure the user ID exists
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+        ]);
+
+        // Remove the user as a collaborator from the project
+        $project->collaborators()->detach($request->user_id);
+
+        return redirect()->route('projects.show', $projectId)->with('success', 'Collaborator removed successfully.');
     }
 }
