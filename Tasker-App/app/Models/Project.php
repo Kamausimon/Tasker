@@ -34,4 +34,9 @@ extends Model
     {
         return $this->hasMany(Task::class);
     }
+
+    public function collaborators()
+    {
+        return $this->belongsToMany(User::class, 'project_user');
+    }
 }
