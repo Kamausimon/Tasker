@@ -56,6 +56,8 @@ Route::get('/project/{id}', [ProjectController::class, 'show'])->name('project.s
 Route::get('project/{id}/edit', [ProjectController::class, 'edit'])->name('project.edit');
 Route::patch('project/{id}', [ProjectController::class, 'update'])->name('project.update');
 Route::delete('/project/{id}', [ProjectController::class, 'destroy'])->name('project.destroy');
+Route::post('/projects/{project}/add-collaborator', [ProjectController::class, 'addCollaborators'])->name('projects.addCollaborators');
+Route::post('/projects/{project}/remove-collaborator', [ProjectController::class, 'removeCollaborators'])->name('projects.removeCollaborators');
 
 //tagController
 Route::post('/tag', [tagController::class, 'store'])->name('tag.store');
