@@ -8,6 +8,8 @@
 
             <a href="{{ route('reports.summary') }}" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 {{ Request::routeIs('reports.summary') ? 'bg-gray-700' : '' }}">Reports</a>
             <a href="#" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700">Calendar</a>
+            <a href="{{route('task.all')}}" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700">Tasks</a>
+            <a href="#" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700">Projects</a>
         </nav>
 
         <div class="p-4 bg-gray-800 rounded-lg shadow-md">
