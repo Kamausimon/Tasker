@@ -1,7 +1,7 @@
 @extends('task.index')
 @section('content')
 <div class="container mx-auto p-6">
-    <form action="{{ route('project.store') }}" method="POST" class="bg-white p-8 rounded-lg shadow-md">
+    <form action="{{route('project.store')}}" method="POST" id="projectForm" class="bg-white p-8 rounded-lg shadow-md">
         @csrf
 
         <div class="mb-4">
@@ -10,9 +10,33 @@
         </div>
 
         <div class="mb-4">
+            <label for="name" class="block text-gray-700 font-bold mb-2">Name</label>
+            <textarea name="name" id="name" class="shadow appearance-none border rounded w-full py-1 px-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">{{ old('description') }}</textarea>
+            @error('name')
+            <span class="text-red-500 text-xs italic">{{ $message }}</span>
+            @enderror
+        </div>
+
+        <div class="mb-4">
             <label for="description" class="block text-gray-700 font-bold mb-2">Description</label>
             <textarea name="description" id="description" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">{{ old('description') }}</textarea>
             @error('description')
+            <span class="text-red-500 text-xs italic">{{ $message }}</span>
+            @enderror
+        </div>
+
+        <div>
+            <label for="start_date" class="block text-gray-700 text-sm font-bold mb-2">start date</label>
+            <input type="date" id="start_date" name="start_date" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" min="{{ now()->format('Y-m-d') }}">
+            @error('start_date')
+            <span class="text-red-500 text-xs italic">{{ $message }}</span>
+            @enderror
+        </div>
+
+        <div>
+            <label for="end_date" class="block text-gray-700 text-sm font-bold mb-2">End date</label>
+            <input type="date" id="end_date" name="end_date" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" min="{{ now()->format('Y-m-d') }}">
+            @error('end_date')
             <span class="text-red-500 text-xs italic">{{ $message }}</span>
             @enderror
         </div>
@@ -37,13 +61,6 @@
             @enderror
         </div>
 
-        <div class="mb-4">
-            <label for="completed" class="block text-gray-700 font-bold mb-2">Completed</label>
-            <input type="checkbox" name="completed" id="completed" {{ old('completed') ? 'checked' : '' }} class="mr-2 leading-tight">
-            @error('completed')
-            <span class="text-red-500 text-xs italic">{{ $message }}</span>
-            @enderror
-        </div>
 
         <div id="tasks-container" class="mb-4">
             <label class="block text-gray-700 font-bold mb-2">Tasks</label>
@@ -56,7 +73,7 @@
                     <option value="medium">Medium</option>
                     <option value="high">High</option>
                 </select>
-                <input type="checkbox" name="tasks[0][completed]" class="mr-2 leading-tight"> Completed
+
             </div>
         </div>
 
@@ -84,10 +101,23 @@
                 <option value="medium">Medium</option>
                 <option value="high">High</option>
             </select>
-            <input type="checkbox" name="tasks[${taskIndex}][completed]" class="mr-2 leading-tight"> Completed
+
         `;
         container.appendChild(taskDiv);
         taskIndex++;
     }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const dueDateInput = document.getElementById('start_date');
+        const today = new Date().toISOString().split('T')[0]; // Get today's date in 'YYYY-MM-DD' format
+        dueDateInput.setAttribute('min', today); // Set the min attribute to today's date
+
+        dueDateInput.addEventListener('change', function() {
+            if (new Date(dueDateInput.value) < new Date(today)) {
+                alert('The due date cannot be in the past.');
+                dueDateInput.value = today;
+            }
+        });
+    });
 </script>
 @endsection
