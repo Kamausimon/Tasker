@@ -26,7 +26,7 @@ class TaskController extends Controller
     {
         $tasks = Task::all();
         Log::info("Fetched all the tasks");
-        return view('task.index', ['tasks' => $tasks]);
+        return view('task.all', ['tasks' => $tasks]);
     }
 
     /**
