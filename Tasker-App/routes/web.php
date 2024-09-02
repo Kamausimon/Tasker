@@ -30,6 +30,7 @@ Route::middleware('auth')->group(function () {
 
 //Tasks
 Route::get('/tasks', [TaskController::class, 'index'])->name('task.index');
+Route::get('/AllTasks', [TaskController::class, 'showCase'])->name('task.all');
 Route::get('/createTask', [TaskController::class, 'create'])->name('task.create');
 Route::post('/storeTasks', [TaskController::class, 'store'])->name('task.store');
 Route::patch('/task/{id}/update', [TaskController::class, 'update'])->name('task.update');
