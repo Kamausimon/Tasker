@@ -42,6 +42,7 @@ class ProjectController extends Controller
             return redirect()->route('login')->with('error', 'You must be logged in to create a project.');
         }
 
+        Log::info('cleared to create');
         $validated =  $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string',
@@ -56,9 +57,12 @@ class ProjectController extends Controller
             'tasks.*.priority' => 'nullable|in:low,medium,high',
             'tasks.*.completed' => 'boolean',
             'tags' => 'nullable|string',
-            'priority' => 'nullable|string',
-            'completed' => 'boolean',
+            'priority' => 'required|string|in:low,medium,high',
+
         ]);
+
+
+        Log::info('all data validated');
 
         try {
             $project = Project::create([
@@ -66,7 +70,12 @@ class ProjectController extends Controller
                 'description' => $request->description,
                 'start_date' => $request->start_date,
                 'end_date' => $request->end_date,
-                'user_id' => Auth::id()
+                'user_id' => Auth::id(),
+                'completed' => false,
+                'task_ids' => $request->task_ids,
+                'tasks' => $request->tasks,
+                'tags' => $request->tags,
+                'priority' => $request->priority
             ]);
 
             // Attach tasks to project if any were selected
