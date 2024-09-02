@@ -51,7 +51,7 @@ Route::post('/loginUser', [LoginController::class, 'login'])->name('Auth.loginUs
 //ProjectController
 Route::get('/project', [ProjectController::class, 'create'])->name('project.create');
 Route::get('/projects', [ProjectController::class, 'index'])->name('project.index');
-Route::post('/project', [ProjectController::class, 'store'])->middleware('auth')->name('project.store');
+Route::post('/project', [ProjectController::class, 'store'])->name('project.store')->middleware('auth');
 Route::get('/project/{id}', [ProjectController::class, 'show'])->name('project.show');
 Route::get('project/{id}/edit', [ProjectController::class, 'edit'])->name('project.edit');
 Route::patch('project/{id}', [ProjectController::class, 'update'])->name('project.update');
