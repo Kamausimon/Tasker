@@ -109,7 +109,7 @@ class TaskController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'completed' => 'boolean',
-            'completed_at' => 'timestamp|nullable',
+            'completed_at' => 'nullable|date',
             'due_at' => 'nullable|timestamp',
             'priority' => 'required|string|in:low,medium,high'
         ]);
