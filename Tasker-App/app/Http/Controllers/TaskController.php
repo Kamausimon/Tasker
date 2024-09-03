@@ -137,10 +137,10 @@ class TaskController extends Controller
 
             $task->delete();
             Log::info('task deleted successfully');
-            return redirect()->route('Task.index')->with('status', 'task deleted');
+            return redirect()->route('task.index')->with('status', 'task deleted');
         } catch (\Exception $e) {
             Log::error('There was an error creating the product' . $e->getMessage());
-            return redirect()->route('tasks.index', $task->id)->with('status', 'There was an error deleting the product');
+            return redirect()->route('task.index', $task->id)->with('status', 'There was an error deleting the product');
         }
     }
 }
