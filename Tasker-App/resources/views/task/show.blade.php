@@ -26,7 +26,7 @@
 
     <div class="mb-4">
         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Due At</label>
-        <p class="mt-1 text-lg text-gray-900 dark:text-white">{{ $task->due_at }}</p>
+        <p class="mt-1 text-lg text-gray-900 dark:text-white">{{ $task->due_at ? date('Y-m-d', strtotime($task->due_at)) : '' }}</p>
     </div>
 
     <div class="mb-4">
