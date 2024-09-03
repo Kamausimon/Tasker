@@ -39,7 +39,9 @@
 
         <div>
             <label for="due_at" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Due At</label>
-            <input type="date" name="due_at" id="due_at" value="{{ $task->due_at }}" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+            <input type="date" name="due_at" id="due_at"
+                value="{{ $task->due_at ? date('Y-m-d', strtotime($task->due_at)) : '' }}
+                class=" mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
         </div>
 
         <div>
