@@ -96,6 +96,9 @@ class TaskController extends Controller
         //
         $task = Task::findOrFail($id);
         if (!$task) abort(404);
+        // @dd($task->due_at, gettype($task->due_at));
+
+
         return view('task.edit', ['task' => $task]);
     }
 
@@ -110,7 +113,7 @@ class TaskController extends Controller
             'description' => 'required|string',
             'completed' => 'boolean',
             'completed_at' => 'nullable|date',
-            'due_at' => 'nullable|timestamp',
+            'due_at' => 'nullable|date|after_or_equal:today',
             'priority' => 'required|string|in:low,medium,high'
         ]);
 
