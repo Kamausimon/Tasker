@@ -39,4 +39,9 @@ extends Model
     {
         return $this->belongsToMany(User::class, 'project_user');
     }
+
+    public function owner()
+    {
+        return $this->belongsTo(User::class, 'owner_id');
+    }
 }
