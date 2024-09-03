@@ -75,7 +75,9 @@ class ProjectController extends Controller
                 'task_ids' => $request->task_ids,
                 'tasks' => $request->tasks,
                 'tags' => $request->tags,
-                'priority' => $request->priority
+                'priority' => $request->priority,
+                'owner_id' => Auth::id()
+
             ]);
 
             // Attach tasks to project if any were selected
