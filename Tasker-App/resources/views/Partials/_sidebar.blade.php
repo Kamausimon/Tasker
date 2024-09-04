@@ -1,4 +1,4 @@
-<div x-data="{ open: false }" class="flex h-screen scroll-smooth ">
+<div x-data="{ open: false }" class="flex h-dvh scroll-smooth ">
     <!-- Sidebar -->
     <div :class="open ? 'translate-x-0' : '-translate-x-full'" class="bg-gray-800 text-white  space-y-6 py-7 px-2 absolute inset-y-0 left-0 transform md:relative md:translate-x-0 transition duration-200 ease-in-out">
         <a href="{{route('task.index')}}" class="text-white flex items-center space-x-2 px-4">
