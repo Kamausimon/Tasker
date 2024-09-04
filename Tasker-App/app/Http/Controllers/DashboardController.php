@@ -25,4 +25,12 @@ class DashboardController extends Controller
 
         return view('dashboard', compact('user', 'tasksCreated', 'tasksDueToday', 'overdueItems', 'pendingTasks', 'projects', 'tasksInProgressCount', 'finishedTasksCount'));
     }
+
+    public function showCalendar()
+    {
+        $projects = Project::all(); // Adjust as per your needs, e.g., filter by user
+        $tasks = Task::all(); // Adjust as per your needs
+
+        return view('calendar', compact('projects', 'tasks'));
+    }
 }
