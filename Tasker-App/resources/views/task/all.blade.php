@@ -1,33 +1,38 @@
 @extends('task.index')
 @section('content')
-<div class="p-4 bg-gray-800 rounded-md shadow-md">
-    <h6 class="text-slate-400 ml-2 text-lg font-semibold">All Tasks</h6>
+<div class="p-6 bg-gray-800 rounded-lg shadow-md">
+    <h6 class="text-slate-200 text-xl font-semibold mb-4">All Tasks</h6>
     @if ($tasks->isNotEmpty())
-    <ul class="ml-2 mt-2 space-y-2">
+    <ul class="space-y-4">
         @foreach ($tasks as $task)
-        <li class="flex items-center justify-between p-2 bg-gray-700 rounded-md">
+        <li class="flex items-center justify-between p-4 bg-gray-700 rounded-lg transition transform hover:-translate-y-1 hover:shadow-lg">
             <div>
-                <a href="{{ route('task.show', $task->id) }}" class="text-blue-400 hover:underline">
+                <a href="{{ route('task.show', $task->id) }}" class="text-blue-400 text-lg font-medium hover:underline">
                     {{ $task->title }}
                 </a>
-                <span class="text-sm text-gray-500 block">Created on {{ $task->created_at->format('Y-m-d') }}</span>
+                <span class="text-sm text-gray-400 block">Created on {{ $task->created_at->format('Y-m-d') }}</span>
             </div>
-            <div class="flex space-x-2">
-                <a href="{{ route('task.edit', $task->id) }}" class="text-yellow-400 hover:underline mt-1 ml-2">Edit</a>
+            <div class="flex items-center space-x-4">
+                <a href="{{ route('task.edit', $task->id) }}" class="text-yellow-400 font-medium hover:text-yellow-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24">
+                        <path fill="currentColor" d="M15.3 3.3c.8-.8 2-.8 2.8 0l2.6 2.6c.8.8.8 2 0 2.8l-10 10c-.2.2-.4.3-.7.3h-4c-.6 0-1-.4-1-1v-4c0-.3.1-.5.3-.7l10-10zm1.7 4.6l-2.6-2.6-9.4 9.4v2.6h2.6l9.4-9.4zm3-3l-2.6-2.6-1.4 1.4 2.6 2.6 1.4-1.4z" />
+                    </svg>
+                </a>
                 <form action="{{ route('task.destroy', $task->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this task?');">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="text-red-400 hover:underline"> <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 24 24">
-                            <path fill="grey" d="M7.616 20q-.672 0-1.144-.472T6 18.385V6H5V5h4v-.77h6V5h4v1h-1v12.385q0 .69-.462 1.153T16.384 20zM17 6H7v12.385q0 .269.173.442t.443.173h8.769q.23 0 .423-.192t.192-.424zM9.808 17h1V8h-1zm3.384 0h1V8h-1zM7 6v13z" />
-                        </svg></button>
-
+                    <button type="submit" class="text-red-400 font-medium hover:text-red-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24">
+                            <path fill="currentColor" d="M9 3h6a1 1 0 0 1 1 1v1h4v2h-1v12a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V7H4V5h4V4a1 1 0 0 1 1-1zm3 6h1v9h-1V9zm3 0h1v9h-1V9zm-4 0h1v9H9V9zm5-4H8v1h8V5zm-7 9h1v9H7V9z" />
+                        </svg>
+                    </button>
                 </form>
             </div>
         </li>
         @endforeach
     </ul>
     @else
-    <p class="ml-2 mt-2 text-gray-400">No tasks available.</p>
+    <p class="text-gray-400">No tasks available.</p>
     @endif
 </div>
 @endsection
