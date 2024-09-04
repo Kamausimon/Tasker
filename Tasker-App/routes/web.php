@@ -97,6 +97,7 @@ Route::get('/attachments/{attachment}/download', [AttachmentsController::class, 
 
 //DashboardController
 Route::get('/dashboard/{id}', [DashboardController::class, 'index'])->name('dashboard')->middleware('auth');
+Route::get('/calendar', [DashboardController::class, 'showCalendar'])->name('calendar');
 
 
 //reportsController
