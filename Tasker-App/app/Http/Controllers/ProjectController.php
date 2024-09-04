@@ -94,7 +94,7 @@ class ProjectController extends Controller
 
             Log::info('Project created successfully.', ['project_id' => $project->id]);
 
-            return redirect()->route('project.index')->with('status', 'Project created successfully!');
+            return redirect()->route('project.show', $project->id)->with('status', 'Project created successfully!');
         } catch (\Exception $e) {
             Log::error('There was an error creating the project: ' . $e->getMessage());
             return redirect()->route('project.create')->with('error', 'There was an error creating the project.');
@@ -107,7 +107,7 @@ class ProjectController extends Controller
     public function show(string $id)
     {
         //
-        $project = Project::findOrFail($id);
+        $project = Project::with(['collaborators', 'tasks'])->findOrFail($id);
 
         return view('project.show', ['project' => $project]);
     }
@@ -173,7 +173,7 @@ class ProjectController extends Controller
             return redirect()->route('project.index')->with('status', 'success deleting product');
         } catch (\Exception $e) {
             log::error('There was an error deleting the project' . $e->getMessage());
-            return redirect()->route('project.index')->with('status', 'Encountered error while deleting product');
+            return redirect()->route('project.all')->with('status', 'Encountered error while deleting product');
         }
     }
 
