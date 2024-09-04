@@ -17,12 +17,19 @@ extends Model
         'description',
         'start_date',
         'end_date',
-        'user_id'
+        'user_id',
+        'tasks',
+        'priority',
+        'tags',
+        'completed',
+        'collaborators'
     ];
 
     protected $casts = [
         'start_date' => 'datetime',
-        'end_date' => 'datetime'
+        'end_date' => 'datetime',
+        'completed' => 'boolean',
+        'tasks' => 'array'
     ];
 
     public function user()
