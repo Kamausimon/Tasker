@@ -37,7 +37,7 @@ class DashboardController extends Controller
         foreach ($projects as $project) {
             $events[] = [
                 'title' => $project->name,
-                'start' => $project->due_date,
+                'start' => $project->end_date,
                 'color' => 'blue',
             ];
         }
