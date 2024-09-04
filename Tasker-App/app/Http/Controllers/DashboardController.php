@@ -28,9 +28,28 @@ class DashboardController extends Controller
 
     public function showCalendar()
     {
+
         $projects = Project::all(); // Adjust as per your needs, e.g., filter by user
         $tasks = Task::all(); // Adjust as per your needs
 
-        return view('calendar', compact('projects', 'tasks'));
+        $events = [];
+
+        foreach ($projects as $project) {
+            $events[] = [
+                'title' => $project->name,
+                'start' => $project->due_date,
+                'color' => 'blue',
+            ];
+        }
+
+        foreach ($tasks as $task) {
+            $events[] = [
+                'title' => $task->title,
+                'start' => $task->due_at,
+                'color' => 'green',
+            ];
+        }
+
+        return view('calendar', compact('events'));
     }
 }
