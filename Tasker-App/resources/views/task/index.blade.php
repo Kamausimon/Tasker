@@ -5,8 +5,8 @@
  <body class="bg-gray-700">
 
      @include('partials._nav')
-     <div class="grid grid-cols-6 gap-0">
-         <div clas="col-span-1">
+     <div class="grid grid-cols-6 gap-0 ">
+         <div clas="col-span-1 ">
              @include('partials._sidebar')
          </div>
 
@@ -28,7 +28,9 @@
 
          <!-- end of main content -->
      </div>
-
+     <div>
+         @include('partials._footer')
+     </div>
  </body>
 
  </html>
