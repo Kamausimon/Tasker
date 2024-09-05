@@ -55,7 +55,7 @@ class TaskController extends Controller
 
         ]);
 
-        $userId = Auth::user()->id;
+
         try {
 
 
@@ -109,16 +109,20 @@ class TaskController extends Controller
     {
         // Validate the input data
         $request->validate([
+            'completed' => 'boolean',
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'completed' => 'boolean',
             'completed_at' => 'nullable|date',
             'due_at' => 'nullable|date|after_or_equal:today',
-            'priority' => 'required|string|in:low,medium,high'
+            'priority' => 'required|string|in:low,medium,high',
+            'project_id' => 'nullable|exists:projects,id',
+            'category_id' => 'nullable|exists:task_categories,id'
         ]);
 
         // Find the task by ID or fail
-        $task = Task::findOrFail($id);
+        $task = Task::find($id);
+
+        Log::info('task retrieved', $task);
 
         // Log the incoming request data to help with debugging
         Log::info('Request Data:', $request->all());
