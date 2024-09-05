@@ -8,7 +8,7 @@
     <!-- Edit Form -->
     <form action="{{ route('project.update', $project->id) }}" method="POST">
         @csrf
-        @method('PUT')
+        @method('PATCH')
 
         <!-- Project Basic Information -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
@@ -53,19 +53,19 @@
         <!-- Collaborators Section -->
         <div class="mb-6">
             <label for="collaborators" class="block text-lg font-bold text-gray-700 dark:text-gray-300 mb-2">Collaborators</label>
-            @if ($project->collaborators && $project->collaborators->isNotEmpty())
+            @if (collect($project->collaborators)->isNotEmpty())
             <input type="text" name="collaborators" id="collaborators"
-                value="{{ old('collaborators', implode(', ', $project->collaborators->pluck('email')->toArray())) }}"
+                value="{{ old('collaborators', implode(', ', collect($project->collaborators)->pluck('email')->toArray())) }}"
                 class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm
-                      focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm
-                      dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                  focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm
+                  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
             @else
             <input type="text" name="collaborators" id="collaborators"
                 value="{{ old('collaborators') }}"
                 placeholder="Add collaborators by email"
                 class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm
-                      focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm
-                      dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                  focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm
+                  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
             @endif
             <p class="text-xs text-gray-600 dark:text-gray-400 mt-2">Enter emails separated by commas.</p>
         </div>
@@ -131,6 +131,16 @@
         `;
         container.appendChild(taskDiv);
         taskIndex++;
+    }
+
+    function addCollaboratorField() {
+        const container = document.getElementById('collaborators-container');
+        const input = document.createElement('input');
+        input.type = 'email';
+        input.name = 'collaborators[]';
+        input.placeholder = 'Add collaborator email';
+        input.className = 'mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white';
+        container.appendChild(input);
     }
 </script>
 
