@@ -28,9 +28,7 @@
 
          <!-- end of main content -->
      </div>
-     <div>
-         @include('partials._footer')
-     </div>
+
  </body>
 
  </html>
