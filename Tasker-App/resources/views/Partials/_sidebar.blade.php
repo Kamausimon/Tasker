@@ -14,7 +14,7 @@
 
         <div class="p-4 bg-gray-800 rounded-lg shadow-md">
             <h6 class="text-slate-400 ml-2 text-lg font-semibold">Recently created Project</h6>
-            @if ($recentProject)
+            @if ($recentProject && $recentProject->user_id == auth()->id())
             <a href="{{ route('project.show', $recentProject->id) }}" class="ml-2 mt-2 text-white bg-gray-700 p-2 rounded-md block">
                 {{$recentProject->name}}
             </a>
@@ -28,6 +28,7 @@
             @if ($recentIncompleteTasks->isNotEmpty())
             <ul class="ml-2 mt-2 space-y-2">
                 @foreach ($recentIncompleteTasks as $task)
+                @if ($task->user_id == auth()->id())
                 <li class="flex items-center justify-between p-2 bg-gray-700 rounded-md">
                     <div>
                         <a href="{{ route('task.show', $task->id) }}" class="text-blue-400 hover:underline">
@@ -36,6 +37,7 @@
                         <span class="text-sm text-gray-500 block">Created on {{ $task->created_at->format('Y-m-d') }}</span>
                     </div>
                 </li>
+                @endif
                 @endforeach
             </ul>
             @else
