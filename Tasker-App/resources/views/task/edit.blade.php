@@ -88,6 +88,7 @@
         const toggle = document.getElementById('toggleFour');
         const completedAtInput = document.getElementById('completed_at');
 
+
         toggle.addEventListener('change', function() {
             if (toggle.checked) {
                 const now = new Date().toISOString().slice(0, 16);
@@ -96,6 +97,14 @@
                 completedAtInput.value = '';
             }
         });
+
+
+        if (toggle.checked) {
+            const now = new Date().toISOString().slice(0, 16);
+            if (!completedAtInput.value) {
+                completedAtInput.value = now;
+            }
+        }
     });
 </script>
 
