@@ -35,28 +35,9 @@ class sidebarViewServiceProvider extends ServiceProvider
                 ->get();
 
             // Log details of the recent project if found
-            if ($recentProject) {
-                Log::info('Retrieved recent project', [
-                    'id' => $recentProject->id,
-                    'name' => $recentProject->name,
-                    'created_at' => $recentProject->created_at,
-                ]);
-            } else {
-                Log::info('No recent project found');
-            }
 
-            // Log details of the recent incomplete tasks
-            if ($recentIncompleteTasks->isNotEmpty()) {
-                foreach ($recentIncompleteTasks as $task) {
-                    Log::info('Retrieved recent incomplete task', [
-                        'id' => $task->id,
-                        'title' => $task->title,
-                        'created_at' => $task->created_at,
-                    ]);
-                }
-            } else {
-                Log::info('No recent incomplete tasks found');
-            }
+
+
 
             // Share both the recent project and recent incomplete tasks with the view
             $view->with([
