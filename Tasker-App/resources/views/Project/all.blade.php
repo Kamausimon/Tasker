@@ -5,6 +5,7 @@
     @if ($projects->isNotEmpty())
     <ul class="space-y-4">
         @foreach ($projects as $project)
+        @if ($project->user_id == auth()->id() )
         <li class="flex items-center justify-between p-4 bg-gray-700 rounded-lg transition transform hover:-translate-y-1 hover:shadow-lg">
             <div>
                 <a href="{{ route('project.show', $project->id) }}" class="text-blue-400 text-lg font-medium hover:underline">
@@ -29,6 +30,7 @@
                 </form>
             </div>
         </li>
+        @endif
         @endforeach
     </ul>
     @else
