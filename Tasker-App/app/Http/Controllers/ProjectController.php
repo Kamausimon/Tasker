@@ -18,7 +18,7 @@ class ProjectController extends Controller
     public function index()
     {
         //
-        $projects = Project::all();
+        $projects = Project::with('collaborators')->get();
 
         return view('project.all', ['projects' => $projects]);
     }
@@ -128,14 +128,11 @@ class ProjectController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string',
-            'start_date' => 'date|required',
-            'end_date' => 'date|required|after_or_equal:start_date',
-            'task_ids' => 'nullable|array',
-            'task_ids*' => 'exists:tasks,id',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
             'tasks' => 'nullable|array',
             'tasks.*.title' => 'required|string|max:255',
             'tasks.*.description' => 'nullable|string',
@@ -143,21 +140,34 @@ class ProjectController extends Controller
             'tasks.*.priority' => 'nullable|in:low,medium,high',
             'tasks.*.completed' => 'boolean',
             'tags' => 'nullable|string',
-            'priority' => 'nullable|string',
-            'completed' => 'boolean'
+            'priority' => 'nullable|string|in:low,medium,high',
+            'completed' => 'boolean',
+            'collaborators' => 'nullable|array',
+            'collaborators.*' => 'email|exists:users,email',
         ]);
 
         $project = Project::findOrFail($id);
 
         try {
-            $project->update([$validatedData]);
+            // Update the project attributes
+            $project->update($validatedData);
 
-            return redirect()->route('project.show', $project->id)->with('status', 'success updating the project details');
+            // Handle collaborators
+            if (!empty($validatedData['collaborators'])) {
+                $userIds = User::whereIn('email', $validatedData['collaborators'])->pluck('id')->toArray();
+
+                // Sync the collaborators
+                $project->collaborators()->sync($userIds);
+            }
+
+            return redirect()->route('project.show', $project->id)->with('status', 'Project updated successfully');
         } catch (\Exception $e) {
-            log::error('there was an error updating the product' . $e->getMessage());
-            return redirect()->route('project.show', $project->id)->with('status', 'error updating project details');
+            Log::error('Error updating the project: ' . $e->getMessage());
+            return redirect()->route('project.show', $project->id)->with('status', 'Error updating project details');
         }
     }
+
+
 
     /**
      * Remove the specified resource from storage.
