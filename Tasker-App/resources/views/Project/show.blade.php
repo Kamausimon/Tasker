@@ -46,10 +46,10 @@
     <!-- Collaborators Section -->
     <div class="mb-6">
         <label class="block text-lg font-bold text-gray-700 dark:text-gray-300 mb-2">Collaborators</label>
-        @if ($project->collaborators && $project->collaborators->isNotEmpty())
+        @if (collect($project->collaborators)->isNotEmpty())
         <ul class="list-disc list-inside bg-gray-100 dark:bg-gray-700 p-4 rounded-lg shadow-md">
             @foreach ($project->collaborators as $collaborator)
-            <li class="text-gray-900 dark:text-gray-100">{{ $collaborator->email }}</li>
+            <li class="text-gray-900 dark:text-gray-100">{{ $collaborator}}</li>
             @endforeach
         </ul>
         @else
