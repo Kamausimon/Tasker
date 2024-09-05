@@ -29,7 +29,8 @@ extends Model
         'start_date' => 'datetime',
         'end_date' => 'datetime',
         'completed' => 'boolean',
-        'tasks' => 'array'
+        'tasks' => 'array',
+        'collaborators' => 'array'
     ];
 
     public function user()
