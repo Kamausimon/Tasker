@@ -107,8 +107,8 @@ class TaskController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
-        $validatedData = $request->validate([
+        // Validate the input data
+        $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'completed' => 'boolean',
@@ -117,18 +117,37 @@ class TaskController extends Controller
             'priority' => 'required|string|in:low,medium,high'
         ]);
 
+        // Find the task by ID or fail
         $task = Task::findOrFail($id);
 
-        try {
+        // Log the incoming request data to help with debugging
+        Log::info('Request Data:', $request->all());
 
-            $task->update($validatedData);
-            Log::info('task updated successfully');
-            return redirect()->route('tasks.show', $task->id)->with('status', 'Task updated successfully');
+        try {
+            // Update task attributes
+            $task->title = $request->input('title');
+            $task->description = $request->input('description');
+            $task->completed = $request->input('completed', false); // Default to false if not present
+            $task->completed_at = $request->input('completed') ? now() : null; // Set completed_at only if completed is true
+            $task->due_at = $request->input('due_at');
+            $task->priority = $request->input('priority');
+
+            // Save the task and log the success message
+            $task->save();
+
+            Log::info('Task updated successfully', ['task_id' => $task->id]);
+
+            // Redirect to the task's show route with a success message
+            return redirect()->route('task.show', $task->id)->with('status', 'Task updated successfully');
         } catch (\Exception $e) {
-            Log::error('There was an error creating the product' . $e->getMessage());
-            return redirect()->route('tasks.show', $task->id)->with('status', 'error updating the product');
+            // Log the error message
+            Log::error('There was an error updating the task: ' . $e->getMessage());
+
+            // Redirect to the task's show route with an error message
+            return redirect()->route('task.show', $task->id)->with('status', 'Error updating the task');
         }
     }
+
 
     /**
      * Remove the specified resource from storage.
