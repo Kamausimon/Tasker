@@ -33,9 +33,9 @@ Route::get('/tasks', [TaskController::class, 'index'])->name('task.index');
 Route::get('/AllTasks', [TaskController::class, 'showCase'])->name('task.all');
 Route::get('/createTask', [TaskController::class, 'create'])->name('task.create');
 Route::post('/storeTasks', [TaskController::class, 'store'])->name('task.store');
-Route::patch('/task/{id}/update', [TaskController::class, 'update'])->name('task.update');
-Route::get('/task/{id}/show', [TaskController::class, 'show'])->name('task.show');
-Route::get('/task/{id}/edit', [TaskController::class, 'edit'])->name('task.edit');
+Route::put('/updatetask/{id}', [TaskController::class, 'update'])->name('task.update');
+Route::get('/showtask/{id}', [TaskController::class, 'show'])->name('task.show');
+Route::get('/editask/{id}', [TaskController::class, 'edit'])->name('task.edit');
 Route::delete('/deleteTask/{id}', [TaskController::class, 'destroy'])->name('task.destroy');
 
 //RegisterController
