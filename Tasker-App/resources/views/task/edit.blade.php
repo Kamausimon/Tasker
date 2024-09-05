@@ -5,9 +5,9 @@
 <div class="max-w-2xl mx-auto p-8 bg-white rounded-lg shadow-md dark:bg-gray-800 mt-6">
     <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Edit Task</h2>
 
-    <form action="{{ route('task.update', $task->id) }}" method="POST" class="space-y-6">
+    <form method="POST" action="{{ route('task.update', $task->id) }}" class="space-y-6">
         @csrf
-        @method('patch')
+        @method('PUT')
 
         <!-- Title Input -->
         <div>
