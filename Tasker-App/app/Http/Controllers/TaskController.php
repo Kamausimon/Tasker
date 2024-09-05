@@ -107,47 +107,33 @@ class TaskController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        // Validate the input data
-        $request->validate([
-            'completed' => 'boolean',
+        // Validation rules
+        $validatedData = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'completed_at' => 'nullable|date',
-            'due_at' => 'nullable|date|after_or_equal:today',
-            'priority' => 'required|string|in:low,medium,high',
-            'project_id' => 'nullable|exists:projects,id',
-            'category_id' => 'nullable|exists:task_categories,id'
+            'completed' => 'boolean',
+            'completed_at' => 'nullable|date', // Ensures completed_at is a valid date when provided
+            'due_at' => 'nullable|date|after_or_equal:today', // due_at should be a valid date, cannot be in the past
+            'priority' => 'required|string|in:low,medium,high', // Must be one of the specified values
+            'category_id' => 'nullable|exists:task_categories,id', // Ensures the category exists in task_categories
+            'user_id' => 'required|exists:users,id', // Ensures the user exists
+            'project_id' => 'nullable|exists:projects,id', // Ensures the project exists when provided
         ]);
 
-        // Find the task by ID or fail
-        $task = Task::find($id);
-
-        Log::info('task retrieved', $task);
-
-        // Log the incoming request data to help with debugging
-        Log::info('Request Data:', $request->all());
+        // Find the task by ID
+        $task = Task::findOrFail($id);
 
         try {
-            // Update task attributes
-            $task->title = $request->input('title');
-            $task->description = $request->input('description');
-            $task->completed = $request->input('completed', false); // Default to false if not present
-            $task->completed_at = $request->input('completed') ? now() : null; // Set completed_at only if completed is true
-            $task->due_at = $request->input('due_at');
-            $task->priority = $request->input('priority');
+            // Update the task with validated data
+            $task->update($validatedData);
 
-            // Save the task and log the success message
-            $task->save();
-
-            Log::info('Task updated successfully', ['task_id' => $task->id]);
-
-            // Redirect to the task's show route with a success message
+            // Redirect to the task show page with success message
             return redirect()->route('task.show', $task->id)->with('status', 'Task updated successfully');
         } catch (\Exception $e) {
             // Log the error message
             Log::error('There was an error updating the task: ' . $e->getMessage());
 
-            // Redirect to the task's show route with an error message
+            // Redirect back with an error message
             return redirect()->route('task.show', $task->id)->with('status', 'Error updating the task');
         }
     }
