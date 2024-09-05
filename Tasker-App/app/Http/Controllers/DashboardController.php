@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Log;
 use App\Models\Project;
 use Illuminate\Support\Facades\Auth;
 
+
 class DashboardController extends Controller
 {
     //
@@ -29,8 +30,17 @@ class DashboardController extends Controller
     public function showCalendar()
     {
 
-        $projects = Project::all(); // Adjust as per your needs, e.g., filter by user
-        $tasks = Task::all(); // Adjust as per your needs
+        $userId = Auth::id();
+
+        // Retrieve projects where the user is the owner or a collaborator
+        $projects = Project::where('user_id', $userId)
+            ->orWhereHas('collaborators', function ($query) use ($userId) {
+                $query->where('user_id', $userId);
+            })
+            ->get();
+
+        // Retrieve tasks that belong to the user
+        $tasks = Task::where('user_id', $userId)->get();
 
         $events = [];
 
