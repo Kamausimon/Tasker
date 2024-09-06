@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\support\facades\Log;
 use App\Models\Task;
 use App\Models\User;
+use Illuminate\validation\ValidationException;
 
 class ProjectController extends Controller
 {
@@ -128,27 +129,27 @@ class ProjectController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'required|string',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date|after_or_equal:start_date',
-            'tasks' => 'nullable|array',
-            'tasks.*.title' => 'required|string|max:255',
-            'tasks.*.description' => 'nullable|string',
-            'tasks.*.due_at' => 'nullable|date',
-            'tasks.*.priority' => 'nullable|in:low,medium,high',
-            'tasks.*.completed' => 'boolean',
-            'tags' => 'nullable|string',
-            'priority' => 'nullable|string|in:low,medium,high',
-            'completed' => 'boolean',
-            'collaborators' => 'nullable|array',
-            'collaborators.*' => 'email|exists:users,email',
-        ]);
-
-        $project = Project::findOrFail($id);
-
         try {
+            $validatedData = $request->validate([
+                'name' => 'required|string|max:255',
+                'description' => 'required|string',
+                'start_date' => 'required|date',
+                'end_date' => 'required|date|after_or_equal:start_date',
+                'tasks' => 'nullable|array',
+                'tasks.*.title' => 'required|string|max:255',
+                'tasks.*.description' => 'nullable|string',
+                'tasks.*.due_at' => 'nullable|date',
+                'tasks.*.priority' => 'nullable|in:low,medium,high',
+                'tasks.*.completed' => 'boolean',
+                'tags' => 'nullable|string',
+                'priority' => 'nullable|string|in:low,medium,high',
+                'completed' => 'boolean',
+                'collaborators' => 'nullable|array',
+                'collaborators.*' => 'email|exists:users,email',
+            ]);
+
+            $project = Project::findOrFail($id);
+
             // Update the project attributes
             $project->update($validatedData);
 
@@ -161,6 +162,12 @@ class ProjectController extends Controller
             }
 
             return redirect()->route('project.show', $project->id)->with('status', 'Project updated successfully');
+        } catch (ValidationException $e) {
+            // Log validation errors
+            Log::error('Validation failed: ', $e->errors());
+            return redirect()->route('project.show', $id)
+                ->withErrors($e->errors()) // Display the validation errors to the user
+                ->withInput(); // Keep the input to allow the user to correct it
         } catch (\Exception $e) {
             Log::error('Error updating the project: ' . $e->getMessage());
             return redirect()->route('project.show', $project->id)->with('status', 'Error updating project details');
