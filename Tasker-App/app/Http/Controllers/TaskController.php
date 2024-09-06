@@ -8,6 +8,7 @@ use Inertia\Inertia;
 use Inertia\Response;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 
 class TaskController extends Controller
 {
@@ -107,37 +108,45 @@ class TaskController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        // Validation rules
-        $validatedData = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'completed' => 'boolean',
-            'completed_at' => 'nullable|date', // Ensures completed_at is a valid date when provided
-            'due_at' => 'nullable|date|after_or_equal:today', // due_at should be a valid date, cannot be in the past
-            'priority' => 'required|string|in:low,medium,high', // Must be one of the specified values
-            'category_id' => 'nullable|exists:task_categories,id', // Ensures the category exists in task_categories
-            'user_id' => 'required|exists:users,id', // Ensures the user exists
-            'project_id' => 'nullable|exists:projects,id', // Ensures the project exists when provided
-        ]);
-
-        // Find the task by ID
-        $task = Task::findOrFail($id);
-
         try {
-            // Update the task with validated data
-            $task->update($validatedData);
+            $request->validate([
 
-            // Redirect to the task show page with success message
+                'category_id' => 'nullable|exists:task_categories,id',
+                'project_id' => 'nullable|exists:projects,id',
+            ]);
+
+            // Proceed with updating the task or any other logic
+            $task = Task::findOrFail($id);
+
+            $task->completed = $request->has('completed');
+            $task->completed_at = $request->input('completed_at');
+            $task->due_at = $request->input('due_at');
+            $task->priority = $request->input('priority');
+            $task->description = $request->input('description');
+            $task->title = $request->input('title');
+            $task->user_id = Auth::id();
+            $task->save();
+
             return redirect()->route('task.show', $task->id)->with('status', 'Task updated successfully');
-        } catch (\Exception $e) {
-            // Log the error message
-            Log::error('There was an error updating the task: ' . $e->getMessage());
+        } catch (ValidationException $e) {
+            // Log the validation errors
+            Log::error('Validation failed', [
+                'errors' => $e->errors(), // Logs all validation errors
+                'input' => $request->all(), // Logs all input data for debugging
+            ]);
 
-            // Redirect back with an error message
-            return redirect()->route('task.show', $task->id)->with('status', 'Error updating the task');
+            // Optionally, redirect back with the validation errors
+            return redirect()->back()->withErrors($e->errors())->withInput();
+        } catch (\Exception $e) {
+            // Log any other exceptions
+            Log::error('There was an error updating the task', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            return redirect()->route('task.show', $id)->with('status', 'Error updating the task');
         }
     }
-
 
     /**
      * Remove the specified resource from storage.
