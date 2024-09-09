@@ -12,17 +12,21 @@ class ReportsController extends Controller
     //
     public function summaryReport()
     {
-        $completedTasks = Task::where('status', 'completed')->get();
+        $completedTasks = Task::where('completed', true)->get();
+        $countCompletedTasks = Task::where('completed', true)->count();
+        $totalTasks = Task::count();
+
+        $completionRate = $totalTasks > 0 ? ($countCompletedTasks / $totalTasks) * 100 : 0;
         $tasksByUser = Task::select('user_id', DB::raw('count(*) as total'))
             ->groupBy('user_id')
             ->get();
 
         // Fetch projects data
         $projects = Project::withCount('tasks')->get();
-        $overdueProjects = Project::where('deadline', '<', now())->get();
+        $overdueProjects = Project::where('end_date', '<', now())->get();
 
         // Pass data to the view
-        return view('reports.summary', compact('completedTasks', 'tasksByUser', 'projects', 'overdueProjects'));
+        return view('reports.summary', compact('completedTasks', 'tasksByUser', 'projects', 'overdueProjects', 'completionRate'));
     }
 
     public function taskReport()
