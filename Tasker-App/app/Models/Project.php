@@ -45,7 +45,7 @@ extends Model
 
     public function collaborators()
     {
-        return $this->belongsToMany(User::class, 'project_user');
+        return $this->belongsToMany(User::class, 'project_user', 'project_id', 'user_id');
     }
 
     public function owner()
