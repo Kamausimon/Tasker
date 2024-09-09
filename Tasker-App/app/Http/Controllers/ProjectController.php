@@ -129,44 +129,32 @@ class ProjectController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        $project = Project::findOrFail($id);
+
         try {
-            if ($request->has('collaborators') && is_string($request->has('collaborators'))) {
-                $collaborators = explode(",", $request->input('collaborators'));
-                $request->merge(['collaborators' => array_map('trim', $collaborators)]);
-            };
+            // Validate the incoming data
             $validatedData = $request->validate([
-                'name' => 'required|string|max:255', // Include the fields directly being updated
+                'name' => 'required|string|max:255',
                 'description' => 'required|string',
                 'start_date' => 'required|date',
                 'end_date' => 'required|date|after_or_equal:start_date',
-                'priority' => 'nullable|string|in:low,medium,high',
-                'completed' => 'boolean',
-
                 'tasks' => 'nullable|array',
                 'tasks.*.title' => 'required|string|max:255',
                 'tasks.*.description' => 'nullable|string',
                 'tasks.*.due_at' => 'nullable|date',
                 'tasks.*.priority' => 'nullable|in:low,medium,high',
                 'tasks.*.completed' => 'boolean',
-
                 'tags' => 'nullable|string',
-
+                'priority' => 'nullable|string|in:low,medium,high',
+                'completed' => 'boolean',
                 'collaborators' => 'nullable|array',
                 'collaborators.*' => 'email|exists:users,email',
             ]);
 
-            $project = Project::findOrFail($id);
+            // Update project with validated data
 
-            // Update basic project fields
-            $project->name = $validatedData['name'];
-            $project->description = $validatedData['description'];
-            $project->start_date = $validatedData['start_date'];
-            $project->end_date = $validatedData['end_date'];
-            $project->priority = $validatedData['priority'] ?? $project->priority; // Only update if provided
-            $project->completed = $request->has('completed');
+            $project->update($validatedData);
 
-            // Save the project
-            $project->save();
 
             // Handle tasks if provided
             if (!empty($validatedData['tasks'])) {
@@ -178,30 +166,29 @@ class ProjectController extends Controller
                     $task->priority = $taskData['priority'] ?? 'medium'; // Default to medium if not provided
                     $task->completed = $taskData['completed'] ?? false;
                     $task->project_id = $project->id; // Associate task with the project
+                    $task->user_id = Auth::id();
 
+                    // Save the task
                     $task->save();
                 }
-            }
-
-            // Handle tags if provided
-            if (!empty($validatedData['tags'])) {
-                $project->tags = $validatedData['tags']; // Assuming tags is a simple string field
             }
 
             // Handle collaborators
             if (!empty($validatedData['collaborators'])) {
                 $userIds = User::whereIn('email', $validatedData['collaborators'])->pluck('id')->toArray();
+                Log::info('User IDs to sync:', $userIds); // Debug log
                 $project->collaborators()->sync($userIds); // Sync collaborators
+                Log::info('Collaborators synced successfully');
             }
-
-
-
 
             return redirect()->route('project.show', $project->id)->with('status', 'Project updated successfully');
         } catch (ValidationException $e) {
             // Log validation errors
-            Log::error('Validation failed: ', $e->errors());
-            return redirect()->route('project.show', $id)
+            Log::error('Validation failed', [
+                'errors' => $e->errors(), // Logs all validation errors
+                'input' => $request->all(), // Logs all input data for debugging
+            ]);
+            return redirect()->route('project.show', $project->id)
                 ->withErrors($e->errors())
                 ->withInput();
         } catch (\Exception $e) {
@@ -209,6 +196,7 @@ class ProjectController extends Controller
             return redirect()->route('project.show', $project->id)->with('status', 'Error updating project details');
         }
     }
+
 
 
 
