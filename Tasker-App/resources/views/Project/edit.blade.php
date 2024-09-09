@@ -50,28 +50,23 @@
             </div>
         </div>
 
-        <!-- Collaborators Section -->
-        <div class="mb-6">
-            <label for="collaborators" class="block text-lg font-bold text-gray-700 dark:text-gray-300 mb-2">Collaborators</label>
-            <div id="collaborators-container">
-                @if (collect($project->collaborators)->isNotEmpty())
-                <input type="text" name="collaborators" id="collaborators"
-                    value="{{ old('collaborators', implode(', ', collect($project->collaborators)->pluck('email')->toArray())) }}"
-                    class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm
-                  focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm
-                  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
-                @else
-                <input type="text" name="collaborators" id="collaborators"
-                    value="{{ old('collaborators') }}"
-                    placeholder="Add collaborators by email"
-                    class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm
-                  focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm
-                  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
-                @endif
-                <p class="text-xs text-gray-600 dark:text-gray-400 mt-2">Enter emails separated by commas.</p>
-            </div>
+        <!-- Display multiple inputs for each email -->
+        <div id="collaborators-container">
+            @if(collect($project->collaborators)->isNotEmpty())
+            @foreach(collect($project->collaborators) as $collaborator)
+            <input type="email" name="collaborators[]" value="{{ old('collaborators', $collaborator->email) }}"
+                class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm
+                focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm
+                dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+            @endforeach
+            @else
+            <input type="email" name="collaborators[]" placeholder="Add collaborator email"
+                class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm
+            focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm
+            dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+            @endif
+            <button type="button" onclick="addCollaboratorField()">Add More</button>
         </div>
-
 
         <!-- Tasks Section -->
         <div class="mb-6">
