@@ -139,6 +139,7 @@ class ProjectController extends Controller
                 'start_date' => 'required|date',
                 'end_date' => 'required|date|after_or_equal:start_date',
                 'tasks' => 'nullable|array',
+                'tasks.*.id' => 'nullable|exists:tasks,id', // Validate task IDs
                 'tasks.*.title' => 'required|string|max:255',
                 'tasks.*.description' => 'nullable|string',
                 'tasks.*.due_at' => 'nullable|date',
@@ -152,41 +153,58 @@ class ProjectController extends Controller
             ]);
 
             // Update project with validated data
-
-            $project->update($validatedData);
-
+            $project->update([
+                'name' => $validatedData['name'],
+                'description' => $validatedData['description'],
+                'start_date' => $validatedData['start_date'],
+                'end_date' => $validatedData['end_date'],
+                'priority' => $validatedData['priority'] ?? $project->priority,
+                'completed' => $validatedData['completed'] ?? $project->completed,
+                'tags' => $validatedData['tags'] ?? $project->tags,
+            ]);
 
             // Handle tasks if provided
             if (!empty($validatedData['tasks'])) {
                 foreach ($validatedData['tasks'] as $taskData) {
-                    $task = new Task(); // Or find an existing task if updating
-                    $task->title = $taskData['title'];
-                    $task->description = $taskData['description'] ?? null;
-                    $task->due_at = $taskData['due_at'] ?? null;
-                    $task->priority = $taskData['priority'] ?? 'medium'; // Default to medium if not provided
-                    $task->completed = $taskData['completed'] ?? false;
-                    $task->project_id = $project->id; // Associate task with the project
-                    $task->user_id = Auth::id();
-
-                    // Save the task
-                    $task->save();
+                    if (isset($taskData['id'])) {
+                        // Update existing task or create if not found
+                        Task::updateOrCreate(
+                            ['id' => $taskData['id'], 'project_id' => $project->id], // Condition to match
+                            [
+                                'title' => $taskData['title'],
+                                'description' => $taskData['description'] ?? null,
+                                'due_at' => $taskData['due_at'] ?? null,
+                                'priority' => $taskData['priority'] ?? 'medium',
+                                'completed' => $taskData['completed'] ?? false,
+                                'user_id' => Auth::id(), // Ensure the task is assigned to the current user
+                            ]
+                        );
+                    } else {
+                        // Create a new task if no ID provided
+                        $project->tasks()->create([
+                            'title' => $taskData['title'],
+                            'description' => $taskData['description'] ?? null,
+                            'due_at' => $taskData['due_at'] ?? null,
+                            'priority' => $taskData['priority'] ?? 'medium',
+                            'completed' => $taskData['completed'] ?? false,
+                            'user_id' => Auth::id(),
+                        ]);
+                    }
                 }
             }
 
             // Handle collaborators
             if (!empty($validatedData['collaborators'])) {
                 $userIds = User::whereIn('email', $validatedData['collaborators'])->pluck('id')->toArray();
-                Log::info('User IDs to sync:', $userIds); // Debug log
                 $project->collaborators()->sync($userIds); // Sync collaborators
-                Log::info('Collaborators synced successfully');
             }
 
             return redirect()->route('project.show', $project->id)->with('status', 'Project updated successfully');
         } catch (ValidationException $e) {
             // Log validation errors
             Log::error('Validation failed', [
-                'errors' => $e->errors(), // Logs all validation errors
-                'input' => $request->all(), // Logs all input data for debugging
+                'errors' => $e->errors(),
+                'input' => $request->all(),
             ]);
             return redirect()->route('project.show', $project->id)
                 ->withErrors($e->errors())
@@ -196,8 +214,6 @@ class ProjectController extends Controller
             return redirect()->route('project.show', $project->id)->with('status', 'Error updating project details');
         }
     }
-
-
 
 
     /**
