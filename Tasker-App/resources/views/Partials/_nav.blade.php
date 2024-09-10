@@ -13,7 +13,7 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex ">
-                    <a href="{{route('task.index')}}" class="text-blue-500 mb-1 mt-3">
+                    <a href="{{route('dashboard', ['id'=>Auth::id()])}}" class="text-blue-500 mb-1 mt-3">
                         <x-application-logo class="p-2 h-9 w-auto fill-current text-gray-800" />
                     </a>
                 </div>
